@@ -52,7 +52,7 @@ upgradeBtn.addEventListener('click', () => {
     alert('No tienes suficientes tokens ANIM.');
   }
 });
-const ADSGRAM_BLOCK_ID = "int-43971";
+const ADSGRAM_BLOCK_ID = "int-43985";
 adBtn.addEventListener('click', () => {
   if (typeof window.Adsgram !== 'undefined') {
     const AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
