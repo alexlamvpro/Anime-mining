@@ -1,6 +1,8 @@
-// 1. Configuración
+// 1. Configuración de Telegram y Supabase
 const BOT_USERNAME = "Animemiming_bot"; 
-const SUPABASE_URL = "https://cnwthrmgzqfydtpenmkj.supabase.co"; 
+
+// PEGA AQUÍ TUS DATOS DE SUPABASE (entre las comillas):
+const SUPABASE_URL = "https://supabase.com/dashboard/project/cnwthrmgzqfydtpenmkj/settings/api-keys"; 
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNud3Rocm1nenFmeWR0cGVubWtqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc0MDcyNTcsImV4cCI6MjEwMjk4MzI1N30.K57rO8UN6YunnpWWvkL-hlsjYQjCeTmzydMi3Mxf-ec";
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -16,10 +18,9 @@ const userObj = tg?.initDataUnsafe?.user;
 const userId = userObj ? String(userObj.id) : "demo123";
 const userName = userObj ? (userObj.first_name || "Minero Anime") : "Minero Anime";
 
-if(document.getElementById('username')){
-  document.getElementById('username').innerText = userName;
-}
+document.getElementById('username').innerText = userName;
 
+// Estado en Memoria
 let balance = 0;
 let miningRate = 0.001;
 let upgradeCost = 10;
@@ -28,7 +29,7 @@ let refCount = 0;
 
 const refLink = `https://t.me/${BOT_USERNAME}/app?startapp=${userId}`;
 
-// 3. DOM Elements
+// DOM Elements
 const tokenCountEl = document.getElementById('token-count');
 const mineRateEl = document.getElementById('mine-rate');
 const userLevelEl = document.getElementById('user-level');
@@ -40,10 +41,9 @@ const adBtn = document.getElementById('ad-button');
 function updateUI() {
   tokenCountEl.innerText = balance.toFixed(3);
   mineRateEl.innerText = miningRate.toFixed(3);
-  if(userLevelEl) userLevelEl.innerText = 'Nv. ' + level;
-  if(upgradeCostEl) upgradeCostEl.innerText = Math.floor(upgradeCost);
-  const refEl = document.getElementById('ref-count-val');
-  if(refEl) refEl.innerText = refCount;
+  userLevelEl.innerText = level;
+  upgradeCostEl.innerText = Math.floor(upgradeCost);
+  document.getElementById('ref-count-val').innerText = refCount;
 }
 
 function notify(mensaje) {
@@ -51,11 +51,11 @@ function notify(mensaje) {
   else alert(mensaje);
 }
 
-// 4. Lógica Backend Supabase
+// 3. Lógica Backend Supabase (Inicialización y Carga)
 async function initUser() {
   const startParam = tg?.initDataUnsafe?.start_param;
 
-  let { data: user } = await supabase
+  let { data: user, error } = await supabase
     .from('users')
     .select('*')
     .eq('telegram_id', userId)
@@ -130,8 +130,6 @@ async function loadReferrals() {
     .eq('referred_by', userId);
 
   const listEl = document.getElementById('friends-list');
-  if (!listEl) return;
-
   if (!friends || friends.length === 0) {
     refCount = 0;
     listEl.innerHTML = '<li class="empty-list">Aún no has invitado a nadie 🚀</li>';
@@ -147,37 +145,89 @@ async function loadReferrals() {
   updateUI();
 }
 
-// 5. Minería Automática
+// 4. Interacciones y Bucle
 setInterval(() => {
   balance += miningRate;
   updateUI();
 }, 1000);
 
-setInterval(saveData, 10000);
+setInterval(saveData, 15000);
 
-// 6. Eventos
-if(mineBtn){
-  mineBtn.addEventListener('click', () => {
-    balance += (miningRate * 0.5);
+mineBtn.addEventListener('click', () => {
+  balance += (miningRate * 0.5);
+  updateUI();
+});
+
+upgradeBtn.addEventListener('click', async () => {
+  if (balance >= upgradeCost) {
+    balance -= upgradeCost;
+    miningRate += 0.002;
+    level += 1;
+    upgradeCost = Math.round(upgradeCost * 1.8);
     updateUI();
-  });
-}
+    await saveData();
+    notify('¡Pico Mejorado! ⚡');
+  } else {
+    notify('No tienes suficientes tokens ANIM.');
+  }
+});
 
-if(upgradeBtn){
-  upgradeBtn.addEventListener('click', async () => {
-    if (balance >= upgradeCost) {
-      balance -= upgradeCost;
-      miningRate += 0.002;
-      level += 1;
-      upgradeCost = Math.round(upgradeCost * 1.8);
-      updateUI();
-      await saveData();
-      notify('¡Pico Mejorado! ⚡');
-    } else {
-      notify('No tienes suficientes tokens ANIM.');
-    }
-  });
-}
-
+// Adsgram
 const ADSGRAM_BLOCK_ID = "int-43985";
-if(adBtn){
+adBtn.addEventListener('click', () => {
+  if (typeof window.Adsgram !== 'undefined') {
+    const AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
+    AdController.show().then(async (result) => {
+      if (result.done) {
+        balance += 10.0;
+        updateUI();
+        await saveData();
+        notify('¡Felicidades! Ganaste +10.0 ANIM por ver el anuncio.');
+      }
+    }).catch(() => notify('No se pudo completar el anuncio.'));
+  } else {
+    balance += 10.0;
+    updateUI();
+    saveData();
+    notify('[MODO DEMO] Ganaste +10.0 ANIM');
+  }
+});
+
+// Navegación Tab
+function switchTab(tabName) {
+  const miningSection = document.getElementById('mining-section');
+  const friendsSection = document.getElementById('friends-section');
+  const navMine = document.getElementById('nav-mine');
+  const navFriends = document.getElementById('nav-friends');
+
+  if (tabName === 'mining') {
+    miningSection.style.display = 'block';
+    friendsSection.style.display = 'none';
+    navMine.classList.add('active');
+    navFriends.classList.remove('active');
+  } else if (tabName === 'friends') {
+    miningSection.style.display = 'none';
+    friendsSection.style.display = 'block';
+    navMine.classList.remove('active');
+    navFriends.classList.add('active');
+    loadReferrals();
+  }
+}
+
+document.getElementById('ref-link').value = refLink;
+
+document.getElementById('copy-btn').addEventListener('click', () => {
+  navigator.clipboard.writeText(refLink);
+  notify('¡Enlace copiado al portapapeles!');
+});
+
+document.getElementById('share-btn').addEventListener('click', () => {
+  const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent("¡Únete a Anime Mining y gana tokens ANIM gratis! 🏮")}`;
+  if (tg) tg.openTelegramLink(shareUrl);
+  else window.open(shareUrl, '_blank');
+});
+
+window.addEventListener('beforeunload', saveData);
+
+// Iniciar app
+initUser();
