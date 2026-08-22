@@ -1,11 +1,19 @@
-// 1. Configuración de Telegram y Supabase
+// 1. Configuración General
 const BOT_USERNAME = "Animemiming_bot"; 
 
-// PEGA AQUÍ TUS DATOS DE SUPABASE (entre las comillas):
+// CREDENCIALES DE SUPABASE (Ingresa tus datos reales dentro de las comillas)
 const SUPABASE_URL = "https://supabase.com/dashboard/project/cnwthrmgzqfydtpenmkj/settings/api-keys"; 
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNud3Rocm1nenFmeWR0cGVubWtqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc0MDcyNTcsImV4cCI6MjEwMjk4MzI1N30.K57rO8UN6YunnpWWvkL-hlsjYQjCeTmzydMi3Mxf-ec";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let supabase = null;
+try {
+  if (window.supabase && !SUPABASE_URL.includes("TU_PROYECTO")) {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  }
+} catch (e) {
+  console.warn("Supabase no inicializado correctamente. Modo offline activo.", e);
+}
+
 const tg = window.Telegram ? window.Telegram.WebApp : null;
 
 if (tg) {
@@ -13,14 +21,14 @@ if (tg) {
   tg.ready();
 }
 
-// 2. Datos del Usuario Telegram
+// 2. Datos del Usuario
 const userObj = tg?.initDataUnsafe?.user;
 const userId = userObj ? String(userObj.id) : "demo123";
 const userName = userObj ? (userObj.first_name || "Minero Anime") : "Minero Anime";
 
 document.getElementById('username').innerText = userName;
 
-// Estado en Memoria
+// Estado
 let balance = 0;
 let miningRate = 0.001;
 let upgradeCost = 10;
@@ -29,7 +37,7 @@ let refCount = 0;
 
 const refLink = `https://t.me/${BOT_USERNAME}/app?startapp=${userId}`;
 
-// DOM Elements
+// Elementos DOM
 const tokenCountEl = document.getElementById('token-count');
 const mineRateEl = document.getElementById('mine-rate');
 const userLevelEl = document.getElementById('user-level');
@@ -39,11 +47,12 @@ const upgradeBtn = document.getElementById('upgrade-button');
 const adBtn = document.getElementById('ad-button');
 
 function updateUI() {
-  tokenCountEl.innerText = balance.toFixed(3);
-  mineRateEl.innerText = miningRate.toFixed(3);
-  userLevelEl.innerText = level;
-  upgradeCostEl.innerText = Math.floor(upgradeCost);
-  document.getElementById('ref-count-val').innerText = refCount;
+  if (tokenCountEl) tokenCountEl.innerText = balance.toFixed(3);
+  if (mineRateEl) mineRateEl.innerText = miningRate.toFixed(3);
+  if (userLevelEl) userLevelEl.innerText = level;
+  if (upgradeCostEl) upgradeCostEl.innerText = Math.floor(upgradeCost);
+  const refCountEl = document.getElementById('ref-count-val');
+  if (refCountEl) refCountEl.innerText = refCount;
 }
 
 function notify(mensaje) {
@@ -51,121 +60,156 @@ function notify(mensaje) {
   else alert(mensaje);
 }
 
-// 3. Lógica Backend Supabase
+// 3. Conexión a Base de Datos
 async function initUser() {
-  const startParam = tg?.initDataUnsafe?.start_param;
-
-  let { data: user, error } = await supabase
-    .from('users')
-    .select('*')
-    .eq('telegram_id', userId)
-    .single();
-
-  if (!user) {
-    let referredBy = (startParam && startParam !== userId) ? startParam : null;
-    let initialBalance = referredBy ? 50.0 : 0.0;
-
-    const { data: newUser } = await supabase
-      .from('users')
-      .insert([{
-        telegram_id: userId,
-        username: userName,
-        balance: initialBalance,
-        mining_rate: 0.001,
-        upgrade_cost: 10,
-        level: 1,
-        referred_by: referredBy
-      }])
-      .select()
-      .single();
-
-    user = newUser;
-
-    if (referredBy) {
-      notify('🎁 ¡Recibiste +50.0 ANIM por unirte con invitación!');
-      await rewardReferrer(referredBy);
-    }
+  if (!supabase) {
+    updateUI();
+    return;
   }
 
-  balance = parseFloat(user.balance);
-  miningRate = parseFloat(user.mining_rate);
-  upgradeCost = parseFloat(user.upgrade_cost);
-  level = parseInt(user.level);
+  try {
+    const startParam = tg?.initDataUnsafe?.start_param;
+
+    let { data: user } = await supabase
+      .from('users')
+      .select('*')
+      .eq('telegram_id', userId)
+      .single();
+
+    if (!user) {
+      let referredBy = (startParam && startParam !== userId) ? startParam : null;
+      let initialBalance = referredBy ? 50.0 : 0.0;
+
+      const { data: newUser } = await supabase
+        .from('users')
+        .insert([{
+          telegram_id: userId,
+          username: userName,
+          balance: initialBalance,
+          mining_rate: 0.001,
+          upgrade_cost: 10,
+          level: 1,
+          referred_by: referredBy
+        }])
+        .select()
+        .single();
+
+      user = newUser;
+
+      if (referredBy) {
+        notify('🎁 ¡Recibiste +50.0 ANIM por unirte con invitación!');
+        await rewardReferrer(referredBy);
+      }
+    }
+
+    if (user) {
+      balance = parseFloat(user.balance) || 0;
+      miningRate = parseFloat(user.mining_rate) || 0.001;
+      upgradeCost = parseFloat(user.upgrade_cost) || 10;
+      level = parseInt(user.level) || 1;
+    }
+  } catch (err) {
+    console.error("Error al cargar usuario de Supabase:", err);
+  }
 
   updateUI();
   loadReferrals();
 }
 
 async function rewardReferrer(referrerId) {
-  const { data: referrer } = await supabase
-    .from('users')
-    .select('balance')
-    .eq('telegram_id', referrerId)
-    .single();
-
-  if (referrer) {
-    await supabase
+  if (!supabase) return;
+  try {
+    const { data: referrer } = await supabase
       .from('users')
-      .update({ balance: parseFloat(referrer.balance) + 50.0 })
-      .eq('telegram_id', referrerId);
+      .select('balance')
+      .eq('telegram_id', referrerId)
+      .single();
+
+    if (referrer) {
+      await supabase
+        .from('users')
+        .update({ balance: parseFloat(referrer.balance) + 50.0 })
+        .eq('telegram_id', referrerId);
+    }
+  } catch (e) {
+    console.error("Error al recompensar referidor:", e);
   }
 }
 
 async function saveData() {
-  await supabase
-    .from('users')
-    .update({
-      balance: balance,
-      mining_rate: miningRate,
-      upgrade_cost: upgradeCost,
-      level: level
-    })
-    .eq('telegram_id', userId);
+  if (!supabase) return;
+  try {
+    await supabase
+      .from('users')
+      .update({
+        balance: balance,
+        mining_rate: miningRate,
+        upgrade_cost: upgradeCost,
+        level: level
+      })
+      .eq('telegram_id', userId);
+  } catch (e) {
+    console.error("Error al guardar datos:", e);
+  }
 }
 
 async function loadReferrals() {
-  const { data: friends } = await supabase
-    .from('users')
-    .select('username, created_at')
-    .eq('referred_by', userId);
+  if (!supabase) return;
+  try {
+    const { data: friends } = await supabase
+      .from('users')
+      .select('username, created_at')
+      .eq('referred_by', userId);
 
-  const listEl = document.getElementById('friends-list');
-  if (!friends || friends.length === 0) {
-    refCount = 0;
-    listEl.innerHTML = '<li class="empty-list">Aún no has invitado a nadie 🚀</li>';
-  } else {
-    refCount = friends.length;
-    listEl.innerHTML = friends.map(f => `
-      <li>
-        <span>👤 ${f.username}</span>
-        <span class="reward-badge">+50.0 ANIM</span>
-      </li>
-    `).join('');
+    const listEl = document.getElementById('friends-list');
+    if (listEl) {
+      if (!friends || friends.length === 0) {
+        refCount = 0;
+        listEl.innerHTML = '<li class="empty-list">Aún no has invitado a nadie 🚀</li>';
+      } else {
+        refCount = friends.length;
+        listEl.innerHTML = friends.map(f => `
+          <li>
+            <span>👤 ${f.username}</span>
+            <span class="reward-badge">+50.0 ANIM</span>
+          </li>
+        `).join('');
+      }
+    }
+  } catch (e) {
+    console.error("Error al cargar referidos:", e);
   }
   updateUI();
 }
 
 async function loadLeaderboard() {
-  const { data: topUsers } = await supabase
-    .from('users')
-    .select('username, balance')
-    .order('balance', { ascending: false })
-    .limit(10);
+  if (!supabase) return;
+  try {
+    const { data: topUsers } = await supabase
+      .from('users')
+      .select('username, balance')
+      .order('balance', { ascending: false })
+      .limit(10);
 
-  const listEl = document.getElementById('leaderboard-list');
-  if (topUsers && topUsers.length > 0) {
-    listEl.innerHTML = topUsers.map((u, i) => `
-      <li>
-        <span>${i + 1}. 👤 ${u.username}</span>
-        <span class="reward-badge">${parseFloat(u.balance).toFixed(1)} ANIM</span>
-      </li>
-    `).join('');
-  } else {
-    listEl.innerHTML = '<li class="empty-list">Sin datos de clasificación aún.</li>';
+    const listEl = document.getElementById('leaderboard-list');
+    if (listEl) {
+      if (topUsers && topUsers.length > 0) {
+        listEl.innerHTML = topUsers.map((u, i) => `
+          <li>
+            <span>${i + 1}. 👤 ${u.username}</span>
+            <span class="reward-badge">${parseFloat(u.balance).toFixed(1)} ANIM</span>
+          </li>
+        `).join('');
+      } else {
+        listEl.innerHTML = '<li class="empty-list">Sin datos de clasificación aún.</li>';
+      }
+    }
+  } catch (e) {
+    console.error("Error al cargar ranking:", e);
   }
 }
 
-// 4. Interacciones y Bucle
+// 4. Bucle y Eventos de Minería
 setInterval(() => {
   balance += miningRate;
   updateUI();
@@ -173,47 +217,53 @@ setInterval(() => {
 
 setInterval(saveData, 15000);
 
-mineBtn.addEventListener('click', () => {
-  balance += (miningRate * 0.5);
-  updateUI();
-});
-
-upgradeBtn.addEventListener('click', async () => {
-  if (balance >= upgradeCost) {
-    balance -= upgradeCost;
-    miningRate += 0.002;
-    level += 1;
-    upgradeCost = Math.round(upgradeCost * 1.8);
+if (mineBtn) {
+  mineBtn.addEventListener('click', () => {
+    balance += (miningRate * 0.5);
     updateUI();
-    await saveData();
-    notify('¡Pico Mejorado! ⚡');
-  } else {
-    notify('No tienes suficientes tokens ANIM.');
-  }
-});
+  });
+}
+
+if (upgradeBtn) {
+  upgradeBtn.addEventListener('click', async () => {
+    if (balance >= upgradeCost) {
+      balance -= upgradeCost;
+      miningRate += 0.002;
+      level += 1;
+      upgradeCost = Math.round(upgradeCost * 1.8);
+      updateUI();
+      await saveData();
+      notify('¡Pico Mejorado! ⚡');
+    } else {
+      notify('No tienes suficientes tokens ANIM.');
+    }
+  });
+}
 
 // Adsgram
 const ADSGRAM_BLOCK_ID = "int-43985";
-adBtn.addEventListener('click', () => {
-  if (typeof window.Adsgram !== 'undefined') {
-    const AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
-    AdController.show().then(async (result) => {
-      if (result.done) {
-        balance += 10.0;
-        updateUI();
-        await saveData();
-        notify('¡Felicidades! Ganaste +10.0 ANIM por ver el anuncio.');
-      }
-    }).catch(() => notify('No se pudo completar el anuncio.'));
-  } else {
-    balance += 10.0;
-    updateUI();
-    saveData();
-    notify('[MODO DEMO] Ganaste +10.0 ANIM');
-  }
-});
+if (adBtn) {
+  adBtn.addEventListener('click', () => {
+    if (typeof window.Adsgram !== 'undefined') {
+      const AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
+      AdController.show().then(async (result) => {
+        if (result.done) {
+          balance += 10.0;
+          updateUI();
+          await saveData();
+          notify('¡Felicidades! Ganaste +10.0 ANIM por ver el anuncio.');
+        }
+      }).catch(() => notify('No se pudo completar el anuncio.'));
+    } else {
+      balance += 10.0;
+      updateUI();
+      saveData();
+      notify('[MODO DEMO] Ganaste +10.0 ANIM');
+    }
+  });
+}
 
-// Navegación entre Pestañas (4 Pestañas)
+// 5. Sistema de Navegación de Pestañas
 function switchTab(tabName) {
   const tabs = ['mining', 'friends', 'wallet', 'top'];
   
@@ -234,14 +284,22 @@ function switchTab(tabName) {
   if (tabName === 'top') loadLeaderboard();
 }
 
-document.getElementById('ref-link').value = refLink;
+// Escuchadores de eventos para la barra inferior
+document.getElementById('nav-mine')?.addEventListener('click', () => switchTab('mining'));
+document.getElementById('nav-friends')?.addEventListener('click', () => switchTab('friends'));
+document.getElementById('nav-wallet')?.addEventListener('click', () => switchTab('wallet'));
+document.getElementById('nav-top')?.addEventListener('click', () => switchTab('top'));
 
-document.getElementById('copy-btn').addEventListener('click', () => {
+// Copiar y Compartir Enlace
+const refInput = document.getElementById('ref-link');
+if (refInput) refInput.value = refLink;
+
+document.getElementById('copy-btn')?.addEventListener('click', () => {
   navigator.clipboard.writeText(refLink);
   notify('¡Enlace copiado al portapapeles!');
 });
 
-document.getElementById('share-btn').addEventListener('click', () => {
+document.getElementById('share-btn')?.addEventListener('click', () => {
   const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent("¡Únete a Anime Mining y gana tokens ANIM gratis! 🏮")}`;
   if (tg) tg.openTelegramLink(shareUrl);
   else window.open(shareUrl, '_blank');
@@ -249,5 +307,5 @@ document.getElementById('share-btn').addEventListener('click', () => {
 
 window.addEventListener('beforeunload', saveData);
 
-// Iniciar app
+// Inicializar
 initUser();
