@@ -81,4 +81,4 @@ function showSoon(seccion){
   } else {
     alert('Próximamente: ' + seccion + ' 🚀');
   }
-                  }
+}
