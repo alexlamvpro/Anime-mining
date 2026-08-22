@@ -76,3 +76,10 @@ adBtn.addEventListener('click', () => {
   }
 });
 updateUI();
+function showSoon(seccion){
+  if (tg) {
+    tg.showAlert('Próximamente: ' + seccion + ' 🚀');
+  } else {
+    alert('Próximamente: ' + seccion + ' 🚀');
+  }
+                  }
