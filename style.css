@@ -267,3 +267,45 @@ body {
 .nav-item.active {
   color: #00e5ff;
   }
+/* LISTA DE REFERIDOS */
+.friends-list-container {
+  margin-top: 15px;
+  text-align: left;
+}
+
+.friends-list-container h3 {
+  font-size: 14px;
+  color: #a0a0c0;
+  margin-bottom: 8px;
+}
+
+.friends-list {
+  list-style: none;
+  max-height: 150px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.friends-list li {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.friends-list .empty-list {
+  justify-content: center;
+  color: #666688;
+  font-style: italic;
+}
+
+.reward-badge {
+  color: #00ffaa;
+  font-weight: bold;
+}
