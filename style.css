@@ -268,21 +268,3 @@ body {
 .nav-item small {
   font-size: 10px;
 }
-/* Botón de anuncio */
-#ad-button {
-  background: linear-gradient(90deg, #ff8c00, #ff0080);
-  border: none;
-}
-
-/* Botón de compartir */
-#share-btn {
-  width: 100%;
-  margin-top: 10px;
-  background: #0088cc;
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
-  }
