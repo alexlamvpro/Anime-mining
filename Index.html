@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anime Mining</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="header">
+      <div class="user-badge">
+        <span id="username">⚡ Minero Anime</span>
+      </div>
+      <div class="level-badge">
+        <span id="user-level">Nv. 1</span>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="balance-card">
+        <p class="balance-label">Balance Total</p>
+        <div class="token-balance">
+          <span class="coin-icon">🪙</span>
+          <span id="token-count">0.000</span>
+          <span class="token-symbol">ANIM</span>
+        </div>
+        <p class="rate-label">Velocidad: <span id="mine-rate">0.001</span> ANIM/seg</p>
+      </div>
+
+      <div class="mining-hero">
+        <div class="character-avatar" id="mine-button">
+          <div class="glow-effect"></div>
+          <div class="character-img">🏮</div>
+        </div>
+        <p class="tap-hint">¡Toca el orbe para minar bonus!</p>
+      </div>
+
+      <div class="action-grid">
+        <button class="btn btn-ads" id="ad-button">
+          <span class="btn-icon">📺</span>
+          <div class="btn-text">
+            <strong>Anuncio Recompensa</strong>
+            <small>+10.0 ANIM Al Instante</small>
+          </div>
+        </button>
+
+        <button class="btn btn-upgrade" id="upgrade-button">
+          <span class="btn-icon">⚡</span>
+          <div class="btn-text">
+            <strong>Mejorar Pico</strong>
+            <small>Costo: <span id="upgrade-cost">10</span> ANIM</small>
+          </div>
+        </button>
+      </div>
+    </main>
+
+    <footer class="footer-nav">
+      <button class="nav-item active">⛏️ Minar</button>
+      <button class="nav-item" onclick="alert('Próximamente: Ranking')">🏆 Top</button>
+      <button class="nav-item" onclick="alert('Próximamente: Amigos')">👥 Amigos</button>
+      <button class="nav-item" onclick="alert('Próximamente: Retiros')">💼 Billetera</button>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
