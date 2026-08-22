@@ -51,7 +51,7 @@ function notify(mensaje) {
   else alert(mensaje);
 }
 
-// 3. Lógica Backend Supabase (Inicialización y Carga)
+// 3. Lógica Backend Supabase
 async function initUser() {
   const startParam = tg?.initDataUnsafe?.start_param;
 
@@ -145,6 +145,26 @@ async function loadReferrals() {
   updateUI();
 }
 
+async function loadLeaderboard() {
+  const { data: topUsers } = await supabase
+    .from('users')
+    .select('username, balance')
+    .order('balance', { ascending: false })
+    .limit(10);
+
+  const listEl = document.getElementById('leaderboard-list');
+  if (topUsers && topUsers.length > 0) {
+    listEl.innerHTML = topUsers.map((u, i) => `
+      <li>
+        <span>${i + 1}. 👤 ${u.username}</span>
+        <span class="reward-badge">${parseFloat(u.balance).toFixed(1)} ANIM</span>
+      </li>
+    `).join('');
+  } else {
+    listEl.innerHTML = '<li class="empty-list">Sin datos de clasificación aún.</li>';
+  }
+}
+
 // 4. Interacciones y Bucle
 setInterval(() => {
   balance += miningRate;
@@ -193,25 +213,25 @@ adBtn.addEventListener('click', () => {
   }
 });
 
-// Navegación Tab
+// Navegación entre Pestañas (4 Pestañas)
 function switchTab(tabName) {
-  const miningSection = document.getElementById('mining-section');
-  const friendsSection = document.getElementById('friends-section');
-  const navMine = document.getElementById('nav-mine');
-  const navFriends = document.getElementById('nav-friends');
+  const tabs = ['mining', 'friends', 'wallet', 'top'];
+  
+  tabs.forEach(tab => {
+    const section = document.getElementById(`${tab}-section`);
+    const nav = document.getElementById(`nav-${tab}`);
+    
+    if (tab === tabName) {
+      if (section) section.style.display = 'block';
+      if (nav) nav.classList.add('active');
+    } else {
+      if (section) section.style.display = 'none';
+      if (nav) nav.classList.remove('active');
+    }
+  });
 
-  if (tabName === 'mining') {
-    miningSection.style.display = 'block';
-    friendsSection.style.display = 'none';
-    navMine.classList.add('active');
-    navFriends.classList.remove('active');
-  } else if (tabName === 'friends') {
-    miningSection.style.display = 'none';
-    friendsSection.style.display = 'block';
-    navMine.classList.remove('active');
-    navFriends.classList.add('active');
-    loadReferrals();
-  }
+  if (tabName === 'friends') loadReferrals();
+  if (tabName === 'top') loadLeaderboard();
 }
 
 document.getElementById('ref-link').value = refLink;
