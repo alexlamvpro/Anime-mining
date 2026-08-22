@@ -1,4 +1,3 @@
-
 const tg = window.Telegram ? window.Telegram.WebApp : null;
 if (tg) {
   tg.expand();
