@@ -84,8 +84,30 @@
           </button>
         </div>
       </div>
+
+      <!-- VISTA: BILLETERA -->
+      <div id="wallet-section" class="tab-content" style="display: none;">
+        <div class="friends-card">
+          <h2>💼 Billetera ANIM</h2>
+          <p class="friends-subtitle">Próximamente podrás retirar tus tokens a TON Wallet.</p>
+          <div style="margin: 20px 0; font-size: 32px;">🔒</div>
+          <p style="font-size: 12px; color: #8a8aab;">Fase de minería activa. Retiros deshabilitados temporalmente.</p>
+        </div>
+      </div>
+
+      <!-- VISTA: TOP / RANKING -->
+      <div id="top-section" class="tab-content" style="display: none;">
+        <div class="friends-card">
+          <h2>🏆 Tabla de Líderes</h2>
+          <p class="friends-subtitle">Los mineros con mayor balance del juego.</p>
+          <ul id="leaderboard-list" class="friends-list">
+            <li class="empty-list">Cargando ranking mundial...</li>
+          </ul>
+        </div>
+      </div>
     </main>
 
+    <!-- BARRA INFERIOR COMPLETA -->
     <nav class="bottom-nav">
       <button id="nav-mine" class="nav-item active" onclick="switchTab('mining')">
         <span>⛏️</span>
@@ -94,6 +116,14 @@
       <button id="nav-friends" class="nav-item" onclick="switchTab('friends')">
         <span>👥</span>
         <small>Amigos</small>
+      </button>
+      <button id="nav-wallet" class="nav-item" onclick="switchTab('wallet')">
+        <span>💼</span>
+        <small>Billetera</small>
+      </button>
+      <button id="nav-top" class="nav-item" onclick="switchTab('top')">
+        <span>🏆</span>
+        <small>Top</small>
       </button>
     </nav>
   </div>
