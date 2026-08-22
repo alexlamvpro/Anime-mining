@@ -20,49 +20,77 @@
     </header>
 
     <main class="main-content">
-      <div class="balance-card">
-        <p class="balance-label">Balance Total</p>
-        <div class="token-balance">
-          <span class="coin-icon">🪙</span>
-          <span id="token-count">0.000</span>
-          <span class="token-symbol">ANIM</span>
+      <!-- VISTA PRINCIPAL: MINERÍA -->
+      <div id="mining-section" class="tab-content">
+        <div class="balance-card">
+          <p class="balance-label">Balance Total</p>
+          <div class="token-balance">
+            <span class="coin-icon">🪙</span>
+            <span id="token-count">0.000</span>
+            <span class="token-symbol">ANIM</span>
+          </div>
+          <p class="rate-label">Velocidad: <span id="mine-rate">0.001</span> ANIM/seg</p>
         </div>
-        <p class="rate-label">Velocidad: <span id="mine-rate">0.001</span> ANIM/seg</p>
+
+        <div class="mining-hero">
+          <div class="character-avatar" id="mine-button">
+            <div class="glow-effect"></div>
+            <div class="character-img">🏮</div>
+          </div>
+          <p class="tap-hint">¡Toca el orbe para minar bonus!</p>
+        </div>
+
+        <div class="action-grid">
+          <button class="btn btn-ads" id="ad-button">
+            <span class="btn-icon">📺</span>
+            <div class="btn-text">
+              <strong>Anuncio Recompensa</strong>
+              <small>+10.0 ANIM Al Instante</small>
+            </div>
+          </button>
+
+          <button class="btn btn-upgrade" id="upgrade-button">
+            <span class="btn-icon">⚡</span>
+            <div class="btn-text">
+              <strong>Mejorar Pico</strong>
+              <small>Costo: <span id="upgrade-cost">10</span> ANIM</small>
+            </div>
+          </button>
+        </div>
       </div>
 
-      <div class="mining-hero">
-        <div class="character-avatar" id="mine-button">
-          <div class="glow-effect"></div>
-          <div class="character-img">🏮</div>
+      <!-- VISTA: REFERIDOS (AMIGOS) -->
+      <div id="friends-section" class="tab-content" style="display: none;">
+        <div class="friends-card">
+          <h2>👥 Invita Amigos</h2>
+          <p class="friends-subtitle">Gana <strong>+50.0 ANIM</strong> por cada amigo que se una con tu enlace.</p>
+          
+          <div class="referral-box">
+            <input type="text" id="ref-link" readonly value="Cargando enlace..." />
+            <button id="copy-btn" class="btn-copy">📋 Copiar</button>
+          </div>
+
+          <div class="friends-stats">
+            <p>Amigos invitados: <strong id="ref-count-val">0</strong></p>
+          </div>
+
+          <button id="share-btn" class="btn btn-ads">
+            <span class="btn-icon">🚀</span>
+            <div class="btn-text">
+              <strong>Compartir en Telegram</strong>
+              <small>Enviar invitación a un chat</small>
+            </div>
+          </button>
         </div>
-        <p class="tap-hint">¡Toca el orbe para minar bonus!</p>
-      </div>
-
-      <div class="action-grid">
-        <button class="btn btn-ads" id="ad-button">
-          <span class="btn-icon">📺</span>
-          <div class="btn-text">
-            <strong>Anuncio Recompensa</strong>
-            <small>+10.0 ANIM Al Instante</small>
-          </div>
-        </button>
-
-        <button class="btn btn-upgrade" id="upgrade-button">
-          <span class="btn-icon">⚡</span>
-          <div class="btn-text">
-            <strong>Mejorar Pico</strong>
-            <small>Costo: <span id="upgrade-cost">10</span> ANIM</small>
-          </div>
-        </button>
       </div>
     </main>
 
-        <footer class="footer-nav">
-      <button class="nav-item active">⛏️ Minar</button>
+    <footer class="footer-nav">
+      <button class="nav-item active" id="nav-mine" onclick="switchTab('mining')">⛏️ Minar</button>
       <button class="nav-item" onclick="showSoon('Ranking')">🏆 Top</button>
-      <button class="nav-item" onclick="showSoon('Amigos')">👥 Amigos</button>
+      <button class="nav-item" id="nav-friends" onclick="switchTab('friends')">👥 Amigos</button>
       <button class="nav-item" onclick="showSoon('Billetera')">💼 Billetera</button>
-        </footer>
+    </footer>
   </div>
 
   <script src="script.js"></script>
