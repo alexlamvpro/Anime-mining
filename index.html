@@ -2,70 +2,102 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Anime Mining</title>
+  <link rel="stylesheet" href="style.css">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app-container">
     <header class="header">
       <div class="user-profile">
-        <span id="username">⚡ Minero Anime</span>
+        <span class="avatar">🏮</span>
+        <span id="username">Cargando...</span>
       </div>
-      <div class="badge">
-        <span id="user-level">Nv. 1</span>
-      </div>
+      <div class="badge">Nivel <span id="user-level">1</span></div>
     </header>
 
     <main class="main-content">
-      <div id="mining-section">
+      <!-- VISTA: MINERÍA -->
+      <div id="mining-section" class="tab-content active">
         <div class="balance-card">
-          <p class="balance-label">Balance Total</p>
-          <h1><span id="token-count">0.000</span> ANIM</h1>
-          <p class="rate-label">Velocidad: <span id="mine-rate">0.001</span> ANIM/seg</p>
+          <p class="balance-label">Balance ANIM</p>
+          <h1 id="token-count">0.000</h1>
+          <p class="rate-label">+<span id="mine-rate">0.001</span>/seg</p>
         </div>
 
         <div class="orb-container">
-          <button class="energy-orb" id="mine-button">
-            <span class="orb-core">🏮</span>
+          <button id="mine-button" class="energy-orb">
+            <span class="orb-core">⚡</span>
           </button>
         </div>
 
         <div class="actions">
-          <button class="btn" id="ad-button" style="background: linear-gradient(90deg,#ff8c00,#ff0080);">
-            <span class="btn-icon">📺</span>
-            <div class="btn-text">
-              <strong>Anuncio Recompensa</strong>
-              <small>+10.0 ANIM Al Instante</small>
-            </div>
-          </button>
-          <button class="btn" id="upgrade-button">
-            <span class="btn-icon">⚡</span>
+          <button id="upgrade-button" class="btn btn-upgrade">
+            <span class="btn-icon">⛏️</span>
             <div class="btn-text">
               <strong>Mejorar Pico</strong>
               <small>Costo: <span id="upgrade-cost">10</span> ANIM</small>
             </div>
           </button>
+
+          <button id="ad-button" class="btn btn-ads">
+            <span class="btn-icon">📺</span>
+            <div class="btn-text">
+              <strong>Ver Anuncio</strong>
+              <small>Recompensa: +10.0 ANIM</small>
+            </div>
+          </button>
         </div>
       </div>
 
-      <div id="friends-section" style="display: none;">
+      <!-- VISTA: REFERIDOS (AMIGOS) -->
+      <div id="friends-section" class="tab-content" style="display: none;">
         <div class="friends-card">
           <h2>👥 Invita Amigos</h2>
-          <p class="friends-subtitle">Gana <strong>+50.0 ANIM</strong> por cada amigo.</p>
+          <p class="friends-subtitle">Gana <strong>+50.0 ANIM</strong> por cada amigo que se una con tu enlace.</p>
+          
           <div class="referral-box">
-            <input type="text" id="ref-link" readonly value="Cargando...">
-            <button id="copy-btn" class="btn-copy">Copiar</button>
+            <input type="text" id="ref-link" readonly value="Cargando enlace..." />
+            <button id="copy-btn" class="btn-copy">📋 Copiar</button>
           </div>
+
           <div class="friends-stats">
-            Amigos: <strong id="ref-count-val">0</strong>
+            <p>Total invitados: <strong id="ref-count-val">0</strong></p>
           </div>
-          <button id="share-btn" class="btn" style="width:100%; margin-top:12px; background:#0088cc; justify-content:center;">
-            🚀 Compartir en Telegram
-          </button>
+
           <div class="friends-list-container">
-            <h3>Tus invitados</h3>
+            <h3>Mis Invitados</h3>
             <ul id="friends-list" class="friends-list">
+              <li class="empty-list">Aún no has invitado a nadie 🚀</li>
+            </ul>
+          </div>
+
+          <button id="share-btn" class="btn btn-ads" style="margin-top: 15px;">
+            <span class="btn-icon">🚀</span>
+            <div class="btn-text">
+              <strong>Compartir en Telegram</strong>
+              <small>Enviar invitación a un chat</small>
+            </div>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <nav class="bottom-nav">
+      <button id="nav-mine" class="nav-item active" onclick="switchTab('mining')">
+        <span>⛏️</span>
+        <small>Minería</small>
+      </button>
+      <button id="nav-friends" class="nav-item" onclick="switchTab('friends')">
+        <span>👥</span>
+        <small>Amigos</small>
+      </button>
+    </nav>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
