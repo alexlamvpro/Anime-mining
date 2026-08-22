@@ -4,6 +4,7 @@
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -47,6 +48,17 @@ body {
   border-color: rgba(255, 170, 0, 0.3);
 }
 
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.tab-content {
+  width: 100%;
+}
+
 .balance-card {
   text-align: center;
   background: rgba(255, 255, 255, 0.04);
@@ -87,6 +99,7 @@ body {
 }
 
 .character-avatar {
+  position: relative;
   width: 150px;
   height: 150px;
   border-radius: 50%;
@@ -98,10 +111,28 @@ body {
   cursor: pointer;
   box-shadow: 0 0 30px rgba(255, 0, 128, 0.4);
   transition: transform 0.1s ease;
+  touch-action: manipulation;
 }
 
 .character-avatar:active {
   transform: scale(0.92);
+}
+
+.glow-effect {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: inherit;
+  filter: blur(15px);
+  opacity: 0.6;
+  z-index: -1;
+  animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.4; }
+  100% { transform: scale(1.1); opacity: 0.8; }
 }
 
 .tap-hint {
@@ -126,6 +157,7 @@ body {
   gap: 14px;
   cursor: pointer;
   text-align: left;
+  touch-action: manipulation;
 }
 
 .btn-ads {
@@ -152,6 +184,66 @@ body {
 .btn-text small {
   font-size: 12px;
   opacity: 0.8;
+}
+
+/* SECCIÓN REFERIDOS */
+.friends-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+}
+
+.friends-card h2 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.friends-subtitle {
+  font-size: 13px;
+  color: #a0a0c0;
+  margin-bottom: 16px;
+}
+
+.referral-box {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.referral-box input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #00ffaa;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  outline: none;
+}
+
+.btn-copy {
+  background: #00e5ff;
+  border: none;
+  color: #000;
+  font-weight: bold;
+  padding: 0 14px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.friends-stats {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 14px;
+  color: #a0a0c0;
+  margin-bottom: 16px;
+}
+
+.friends-stats strong {
+  color: #ffffff;
 }
 
 .footer-nav {
