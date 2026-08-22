@@ -5,51 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Anime Mining</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app-container">
     <header class="header">
-      <div class="user-badge">
+      <div class="user-profile">
         <span id="username">⚡ Minero Anime</span>
       </div>
-      <div class="level-badge">
+      <div class="badge">
         <span id="user-level">Nv. 1</span>
       </div>
     </header>
 
     <main class="main-content">
-      <!-- VISTA PRINCIPAL: MINERÍA -->
-      <div id="mining-section" class="tab-content">
+      <div id="mining-section">
         <div class="balance-card">
           <p class="balance-label">Balance Total</p>
-          <div class="token-balance">
-            <span class="coin-icon">🪙</span>
-            <span id="token-count">0.000</span>
-            <span class="token-symbol">ANIM</span>
-          </div>
+          <h1><span id="token-count">0.000</span> ANIM</h1>
           <p class="rate-label">Velocidad: <span id="mine-rate">0.001</span> ANIM/seg</p>
         </div>
 
-        <div class="mining-hero">
-          <div class="character-avatar" id="mine-button">
-            <div class="glow-effect"></div>
-            <div class="character-img">🏮</div>
-          </div>
-          <p class="tap-hint">¡Toca el orbe para minar bonus!</p>
+        <div class="orb-container">
+          <button class="energy-orb" id="mine-button">
+            <span class="orb-core">🏮</span>
+          </button>
         </div>
 
-        <div class="action-grid">
-          <button class="btn btn-ads" id="ad-button">
+        <div class="actions">
+          <button class="btn" id="ad-button" style="background: linear-gradient(90deg,#ff8c00,#ff0080);">
             <span class="btn-icon">📺</span>
             <div class="btn-text">
               <strong>Anuncio Recompensa</strong>
               <small>+10.0 ANIM Al Instante</small>
             </div>
           </button>
-
-          <button class="btn btn-upgrade" id="upgrade-button">
+          <button class="btn" id="upgrade-button">
             <span class="btn-icon">⚡</span>
             <div class="btn-text">
               <strong>Mejorar Pico</strong>
@@ -59,40 +52,20 @@
         </div>
       </div>
 
-      <!-- VISTA: REFERIDOS (AMIGOS) -->
-      <div id="friends-section" class="tab-content" style="display: none;">
+      <div id="friends-section" style="display: none;">
         <div class="friends-card">
           <h2>👥 Invita Amigos</h2>
-          <p class="friends-subtitle">Gana <strong>+50.0 ANIM</strong> por cada amigo que se una con tu enlace.</p>
-          
+          <p class="friends-subtitle">Gana <strong>+50.0 ANIM</strong> por cada amigo.</p>
           <div class="referral-box">
-            <input type="text" id="ref-link" readonly value="Cargando enlace..." />
-            <button id="copy-btn" class="btn-copy">📋 Copiar</button>
+            <input type="text" id="ref-link" readonly value="Cargando...">
+            <button id="copy-btn" class="btn-copy">Copiar</button>
           </div>
-
           <div class="friends-stats">
-            <p>Amigos invitados: <strong id="ref-count-val">0</strong></p>
+            Amigos: <strong id="ref-count-val">0</strong>
           </div>
-
-          <button id="share-btn" class="btn btn-ads">
-            <span class="btn-icon">🚀</span>
-            <div class="btn-text">
-              <strong>Compartir en Telegram</strong>
-              <small>Enviar invitación a un chat</small>
-            </div>
+          <button id="share-btn" class="btn" style="width:100%; margin-top:12px; background:#0088cc; justify-content:center;">
+            🚀 Compartir en Telegram
           </button>
-        </div>
-      </div>
-    </main>
-
-    <footer class="footer-nav">
-      <button class="nav-item active" id="nav-mine" onclick="switchTab('mining')">⛏️ Minar</button>
-      <button class="nav-item" onclick="showSoon('Ranking')">🏆 Top</button>
-      <button class="nav-item" id="nav-friends" onclick="switchTab('friends')">👥 Amigos</button>
-      <button class="nav-item" onclick="showSoon('Billetera')">💼 Billetera</button>
-    </footer>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+          <div class="friends-list-container">
+            <h3>Tus invitados</h3>
+            <ul id="friends-list" class="friends-list">
