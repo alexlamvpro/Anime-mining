@@ -66,18 +66,5 @@
   </div>
 
   <script src="script.js"></script>
-<script>
-  const AdController = window.Adsgram.init({ blockId: "int-XXXX" });
-
-  function verAnuncio() {
-    AdController.show().then((result) => {
-      if (result.done) {
-        alert("¡Ganaste recompensa!");
-        // Aquí pones tu función para dar monedas
-        // addCoins(10);
-      }
-    });
-  }
-</script>
 </body>
 </html>
