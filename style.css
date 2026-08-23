@@ -82,7 +82,7 @@ body {
 }
 
 /* =========================
-   BOTÓN CENTRAL - COBRAR
+   BOTĆ“N CENTRAL - COBRAR
    ========================= */
 
 .claim-container {
@@ -183,7 +183,7 @@ body {
   letter-spacing: 1px;
 }
 
-/* Animación de flotación */
+/* AnimaciĆ³n de flotaciĆ³n */
 
 @keyframes claimFloat {
   0% {
@@ -197,7 +197,6 @@ body {
   100% {
     transform: translateY(0);
   }
-}
 }
 
 .actions {
