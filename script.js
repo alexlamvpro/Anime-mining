@@ -9,7 +9,7 @@ const BOT_USERNAME = "@Animemiming_bot";
 const SUPABASE_URL = "https://cnwthrmgzqfydtpenmkj.supabase.co";
 
 // PEGA AQUÍ TU CLAVE PÚBLICA ANON DE SUPABASE
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNud3Rocm1nenFmeWR0cGVubWtqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc0MDcyNTcsImV4cCI6MjEwMjk4MzI1N30.K57rO8UN6YunnpWWvkL-hlsjYQjCeTmzydMi3Mxf-ec";
+const SUPABASE_KEY = "sb_publishable_1dlROt_qD3hkPCOV_eFjlA_OGpR7MJ8";
 
 
 // =====================================================
