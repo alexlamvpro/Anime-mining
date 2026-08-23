@@ -12,6 +12,21 @@ const SUPABASE_URL = "https://cnwthrmgzqfydtpenmkj.supabase.co";
 const SUPABASE_KEY = "sb_publishable_1dlROt_qD3hkPCOV_eFjlA_OGpR7MJ8";
 
 
+
+// =====================================================
+// ARRANQUE SEGURO - Anime Mining
+// =====================================================
+console.log("ANIME MINING JS 20260823-2 CARGADO");
+
+try {
+  const statusEl = document.getElementById("username");
+  if (statusEl && (!statusEl.innerText || statusEl.innerText === "Cargando...")) {
+    statusEl.innerText = "Minero Anime";
+  }
+} catch (e) {
+  console.error("Error en arranque visual:", e);
+}
+
 // =====================================================
 // 2. CONEXIÓN CON SUPABASE
 // =====================================================
@@ -1018,5 +1033,18 @@ window.addEventListener(
 // 24. INICIAR APP
 // =====================================================
 
+updateUI();
 initUser();
-    
+
+
+// =====================================================
+// DIAGNÓSTICO DE ERRORES
+// =====================================================
+window.addEventListener("error", (event) => {
+  console.error("Anime Mining error:", event.error || event.message);
+});
+
+window.addEventListener("unhandledrejection", (event) => {
+  console.error("Anime Mining promise error:", event.reason);
+});
+      
