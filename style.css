@@ -81,34 +81,123 @@ body {
   color: #00ffaa;
 }
 
-.orb-container {
+/* =========================
+   BOTÓN CENTRAL - COBRAR
+   ========================= */
+
+.claim-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  margin: 20px 0;
+  justify-content: center;
+  margin: 10px 0 20px;
+  width: 100%;
 }
 
-.energy-orb {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #7928ca 0%, #ff0080 100%);
+.claim-available {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.claim-label-small {
+  font-size: 11px;
+  color: #8a8aab;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.claim-available strong {
+  font-size: 20px;
+  color: #00ffaa;
+  margin-top: 3px;
+}
+
+.claim-orb {
+  width: 180px;
+  height: 180px;
+  padding: 0;
+  margin: 0;
   border: none;
   outline: none;
+  background: transparent;
   cursor: pointer;
-  box-shadow: 0 0 30px rgba(255, 0, 128, 0.5);
+
   display: flex;
-  justify-content: center;
   align-items: center;
-  transition: transform 0.1s ease;
+  justify-content: center;
+
+  position: relative;
+
+  transition:
+    transform 0.15s ease,
+    filter 0.2s ease;
 }
 
-.energy-orb:active {
-  transform: scale(0.92);
+.claim-image {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+  display: block;
+
+  pointer-events: none;
+
+  filter:
+    drop-shadow(0 0 8px rgba(0, 140, 255, 0.8))
+    drop-shadow(0 0 20px rgba(120, 40, 255, 0.5));
+
+  animation: claimFloat 3s ease-in-out infinite;
 }
 
-.orb-core {
-  font-size: 48px;
+.claim-orb:active {
+  transform: scale(0.90);
+}
+
+.claim-orb:hover .claim-image {
+  filter:
+    drop-shadow(0 0 12px rgba(0, 255, 255, 0.9))
+    drop-shadow(0 0 28px rgba(120, 40, 255, 0.8));
+}
+
+.claim-button-label {
+  margin-top: -5px;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 16px;
+  color: #ffffff;
+
+  text-shadow:
+    0 0 8px rgba(0, 255, 255, 0.5);
+}
+
+.claim-button-label span {
+  font-size: 18px;
+}
+
+.claim-button-label strong {
+  letter-spacing: 1px;
+}
+
+/* Animación de flotación */
+
+@keyframes claimFloat {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
 }
 
 .actions {
