@@ -618,7 +618,7 @@ if (adBtn) {
 
   adBtn.addEventListener(
     "click",
-    () => {
+    async () => {
 
       if (
         typeof window.Adsgram !==
