@@ -1,5 +1,5 @@
 // 1. Configuración General
-const BOT_USERNAME = "Animemiming_bot"; 
+const BOT_USERNAME = "@Animemiming_bot"; 
 
 // CREDENCIALES DE SUPABASE (Ingresa tus datos reales dentro de las comillas)
 const SUPABASE_URL = "https://supabase.com/dashboard/project/cnwthrmgzqfydtpenmkj/settings/api-keys"; 
