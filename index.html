@@ -3,140 +3,464 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
   <title>Anime Mining</title>
+
   <link rel="stylesheet" href="style.css">
+
+  <!-- Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Adsgram -->
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 </head>
+
 <body>
+
   <div class="app-container">
+
+    <!-- ================= HEADER ================= -->
+
     <header class="header">
+
       <div class="user-profile">
         <span class="avatar">🏮</span>
         <span id="username">Cargando...</span>
       </div>
-      <div class="badge">Nivel <span id="user-level">1</span></div>
+
+      <div class="badge">
+        Nivel <span id="user-level">1</span>
+      </div>
+
     </header>
 
+
+    <!-- ================= CONTENIDO PRINCIPAL ================= -->
+
     <main class="main-content">
-      <!-- VISTA: MINERÍA -->
+
+
+      <!-- ================= MINERÍA ================= -->
+
       <div id="mining-section" class="tab-content">
+
+        <!-- BALANCE -->
+
         <div class="balance-card">
-          <p class="balance-label">Balance ANIM</p>
-          <h1 id="token-count">0.000</h1>
-          <p class="rate-label">+<span id="mine-rate">0.001</span>/seg</p>
+
+          <p class="balance-label">
+            Balance ANIM
+          </p>
+
+          <h1 id="token-count">
+            0.000
+          </h1>
+
+          <p class="rate-label">
+            +<span id="mine-rate">0.001</span>/seg
+          </p>
+
         </div>
+
+
+        <!-- ================= BOTÓN COBRAR ================= -->
 
         <div class="claim-container">
-  <div class="claim-amount">
-    <span>Disponible para cobrar</span>
-    <strong id="pending-count">0.000 ANIM</strong>
-  </div>
 
-  <button id="mine-button" class="claim-orb">
-    <img src="assets/claim-naruto.png" alt="Cobrar ANIM">
-  </button>
+          <div class="claim-available">
 
-  <div class="claim-label">
-    <span>🍥</span> COBRAR
-  </div>
+            <span class="claim-label-small">
+              DISPONIBLE PARA COBRAR
+            </span>
+
+            <strong id="pending-count">
+              0.000 ANIM
+            </strong>
+
+          </div>
+
+
+          <button
+            id="mine-button"
+            class="claim-orb"
+            type="button"
+          >
+
+            <img
+              src="claim-naruto.png"
+              alt="Cobrar ANIM"
+              class="claim-image"
+            >
+
+          </button>
+
+
+          <div class="claim-button-label">
+
+            <span>🍥</span>
+
+            <strong>
+              COBRAR
+            </strong>
+
+          </div>
+
         </div>
+
+
+        <!-- ================= ACCIONES ================= -->
 
         <div class="actions">
-          <button id="upgrade-button" class="btn btn-upgrade">
-            <span class="btn-icon">⛏️</span>
+
+
+          <!-- MEJORAR PICO -->
+
+          <button
+            id="upgrade-button"
+            class="btn btn-upgrade"
+            type="button"
+          >
+
+            <span class="btn-icon">
+              ⛏️
+            </span>
+
             <div class="btn-text">
-              <strong>Mejorar Pico</strong>
-              <small>Costo: <span id="upgrade-cost">10</span> ANIM</small>
+
+              <strong>
+                Mejorar Pico
+              </strong>
+
+              <small>
+                Costo:
+                <span id="upgrade-cost">
+                  10
+                </span>
+                ANIM
+              </small>
+
             </div>
+
           </button>
 
-          <button id="ad-button" class="btn btn-ads">
-            <span class="btn-icon">📺</span>
+
+          <!-- VER ANUNCIO -->
+
+          <button
+            id="ad-button"
+            class="btn btn-ads"
+            type="button"
+          >
+
+            <span class="btn-icon">
+              📺
+            </span>
+
             <div class="btn-text">
-              <strong>Ver Anuncio</strong>
-              <small>Recompensa: +10.0 ANIM</small>
+
+              <strong>
+                Ver Anuncio
+              </strong>
+
+              <small>
+                Recompensa: +10.0 ANIM
+              </small>
+
             </div>
+
           </button>
+
+
         </div>
+
       </div>
 
-      <!-- VISTA: REFERIDOS (AMIGOS) -->
-      <div id="friends-section" class="tab-content" style="display: none;">
+
+      <!-- ================= REFERIDOS ================= -->
+
+      <div
+        id="friends-section"
+        class="tab-content"
+        style="display: none;"
+      >
+
         <div class="friends-card">
-          <h2>👥 Invita Amigos</h2>
-          <p class="friends-subtitle">Gana <strong>+50.0 ANIM</strong> por cada amigo que se una con tu enlace.</p>
-          
+
+          <h2>
+            👥 Invita Amigos
+          </h2>
+
+          <p class="friends-subtitle">
+
+            Gana
+            <strong>
+              +50.0 ANIM
+            </strong>
+            por cada amigo que se una con tu enlace.
+
+          </p>
+
+
+          <!-- ENLACE DE REFERIDO -->
+
           <div class="referral-box">
-            <input type="text" id="ref-link" readonly value="Cargando enlace..." />
-            <button id="copy-btn" class="btn-copy">📋 Copiar</button>
+
+            <input
+              type="text"
+              id="ref-link"
+              readonly
+              value="Cargando enlace..."
+            >
+
+            <button
+              id="copy-btn"
+              class="btn-copy"
+              type="button"
+            >
+              📋 Copiar
+            </button>
+
           </div>
+
+
+          <!-- ESTADÍSTICAS -->
 
           <div class="friends-stats">
-            <p>Total invitados: <strong id="ref-count-val">0</strong></p>
+
+            <p>
+              Total invitados:
+              <strong id="ref-count-val">
+                0
+              </strong>
+            </p>
+
           </div>
+
+
+          <!-- LISTA DE INVITADOS -->
 
           <div class="friends-list-container">
-            <h3>Mis Invitados</h3>
-            <ul id="friends-list" class="friends-list">
-              <li class="empty-list">Aún no has invitado a nadie 🚀</li>
+
+            <h3>
+              Mis Invitados
+            </h3>
+
+            <ul
+              id="friends-list"
+              class="friends-list"
+            >
+
+              <li class="empty-list">
+                Aún no has invitado a nadie 🚀
+              </li>
+
             </ul>
+
           </div>
 
-          <button id="share-btn" class="btn btn-ads" style="margin-top: 15px;">
-            <span class="btn-icon">🚀</span>
+
+          <!-- COMPARTIR -->
+
+          <button
+            id="share-btn"
+            class="btn btn-ads"
+            style="margin-top: 15px;"
+            type="button"
+          >
+
+            <span class="btn-icon">
+              🚀
+            </span>
+
             <div class="btn-text">
-              <strong>Compartir en Telegram</strong>
-              <small>Enviar invitación a un chat</small>
+
+              <strong>
+                Compartir en Telegram
+              </strong>
+
+              <small>
+                Enviar invitación a un chat
+              </small>
+
             </div>
+
           </button>
+
         </div>
+
       </div>
 
-      <!-- VISTA: BILLETERA -->
-      <div id="wallet-section" class="tab-content" style="display: none;">
+
+      <!-- ================= BILLETERA ================= -->
+
+      <div
+        id="wallet-section"
+        class="tab-content"
+        style="display: none;"
+      >
+
         <div class="friends-card">
-          <h2>💼 Billetera ANIM</h2>
-          <p class="friends-subtitle">Próximamente podrás retirar tus tokens a TON Wallet.</p>
-          <div style="margin: 20px 0; font-size: 32px;">🔒</div>
-          <p style="font-size: 12px; color: #8a8aab;">Fase de minería activa. Retiros deshabilitados temporalmente.</p>
+
+          <h2>
+            💼 Billetera ANIM
+          </h2>
+
+          <p class="friends-subtitle">
+            Próximamente podrás retirar tus tokens a TON Wallet.
+          </p>
+
+          <div
+            style="
+              margin: 20px 0;
+              font-size: 32px;
+            "
+          >
+            🔒
+          </div>
+
+          <p
+            style="
+              font-size: 12px;
+              color: #8a8aab;
+            "
+          >
+            Fase de minería activa.
+            Retiros deshabilitados temporalmente.
+          </p>
+
         </div>
+
       </div>
 
-      <!-- VISTA: TOP / RANKING -->
-      <div id="top-section" class="tab-content" style="display: none;">
+
+      <!-- ================= RANKING ================= -->
+
+      <div
+        id="top-section"
+        class="tab-content"
+        style="display: none;"
+      >
+
         <div class="friends-card">
-          <h2>🏆 Tabla de Líderes</h2>
-          <p class="friends-subtitle">Los mineros con mayor balance del juego.</p>
-          <ul id="leaderboard-list" class="friends-list">
-            <li class="empty-list">Cargando ranking mundial...</li>
+
+          <h2>
+            🏆 Tabla de Líderes
+          </h2>
+
+          <p class="friends-subtitle">
+            Los mineros con mayor balance del juego.
+          </p>
+
+          <ul
+            id="leaderboard-list"
+            class="friends-list"
+          >
+
+            <li class="empty-list">
+              Cargando ranking mundial...
+            </li>
+
           </ul>
+
         </div>
+
       </div>
+
     </main>
 
-    <!-- BARRA INFERIOR -->
+
+    <!-- ================= BARRA INFERIOR ================= -->
+
     <nav class="bottom-nav">
-      <button id="nav-mine" class="nav-item active">
-        <span>⛏️</span>
-        <small>Minería</small>
+
+
+      <!-- MINERÍA -->
+
+      <button
+        id="nav-mine"
+        class="nav-item active"
+        type="button"
+      >
+
+        <span>
+          ⛏️
+        </span>
+
+        <small>
+          Minería
+        </small>
+
       </button>
-      <button id="nav-friends" class="nav-item">
-        <span>👥</span>
-        <small>Amigos</small>
+
+
+      <!-- AMIGOS -->
+
+      <button
+        id="nav-friends"
+        class="nav-item"
+        type="button"
+      >
+
+        <span>
+          👥
+        </span>
+
+        <small>
+          Amigos
+        </small>
+
       </button>
-      <button id="nav-wallet" class="nav-item">
-        <span>💼</span>
-        <small>Billetera</small>
+
+
+      <!-- BILLETERA -->
+
+      <button
+        id="nav-wallet"
+        class="nav-item"
+        type="button"
+      >
+
+        <span>
+          💼
+        </span>
+
+        <small>
+          Billetera
+        </small>
+
       </button>
-      <button id="nav-top" class="nav-item">
-        <span>🏆</span>
-        <small>Top</small>
+
+
+      <!-- TOP -->
+
+      <button
+        id="nav-top"
+        class="nav-item"
+        type="button"
+      >
+
+        <span>
+          🏆
+        </span>
+
+        <small>
+          Top
+        </small>
+
       </button>
+
+
     </nav>
+
   </div>
 
+
+  <!-- ================= JAVASCRIPT ================= -->
+
   <script src="script.js"></script>
+
 </body>
 </html>
